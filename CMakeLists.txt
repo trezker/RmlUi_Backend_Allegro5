@@ -6,7 +6,5 @@ endif(COMMAND cmake_policy)
 project(html)
 file(GLOB html_SRC "src/*")
 add_executable(html ${html_SRC})
-target_compile_options(html PRIVATE
-  -Winline -Wunused -Wall -Wextra -Wshadow -Wcast-align -Wpedantic -Werror
-)
-target_link_libraries(html m allegro allegro_font allegro_ttf allegro_primitives allegro_dialog)
+target_compile_options(html PRIVATE)
+target_link_libraries(html m allegro allegro_font allegro_ttf allegro_primitives allegro_dialog litehtml)

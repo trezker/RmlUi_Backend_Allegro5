@@ -6,6 +6,7 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 
+#include "htmlcontainer.h"
 
 void abort_dialog(char const *format, ...) {
 	char str[1024];
@@ -61,6 +62,8 @@ int main() {
 	al_register_event_source(queue, al_get_display_event_source(display));
 
 	ALLEGRO_COLOR black = al_map_rgb_f(0, 0, 0);
+
+	htmlcontainer html;
 
 	int done = 0;
 	while(!done) {
