@@ -14,6 +14,7 @@ void AlRenderInterface::RenderGeometry(Rml::Vertex* vertices,
 	if(texture != 0) {
 		al_draw_bitmap(textures[texture], texture*256, 0, 0);
 	}
+	al_draw_filled_rectangle(0, 0, 100, 100, al_map_rgb_f(0,0,1));
 	//printf("Geo %i\n", num_vertices);
 	/*
 	for(int t=0; t<num_indices/3; ++t) {
@@ -86,10 +87,10 @@ void AlRenderInterface::RenderGeometry(Rml::Vertex* vertices,
 	//al_build_transform(&MainTrans, ScreenW / 2, ScreenH / 2, 1, 1, Theta);
 
 //	if (Blend)
-		al_set_blender(ALLEGRO_ADD, ALLEGRO_ONE, ALLEGRO_ONE);
+//		al_set_blender(ALLEGRO_ADD, ALLEGRO_ONE, ALLEGRO_ONE);
 //	else
 //		al_set_blender(ALLEGRO_ADD, ALLEGRO_ONE, ALLEGRO_ZERO);
-
+	al_set_blender(ALLEGRO_ADD, ALLEGRO_ALPHA, ALLEGRO_ONE);
 	//al_use_transform(&MainTrans);
 
 	if(vbuff && ibuff) {
@@ -127,16 +128,19 @@ bool AlRenderInterface::LoadTexture(Rml::TextureHandle& texture_handle, Rml::Vec
 }
 
 bool AlRenderInterface::GenerateTexture(Rml::TextureHandle& texture_handle, const Rml::byte* source, const Rml::Vector2i& source_dimensions) {
-	printf("GenerateTexture: %i x %i\n", source_dimensions.x, source_dimensions.y);
+//	printf("GenerateTexture: %i x %i\n", source_dimensions.x, source_dimensions.y);
+//	printf("rgba: %i %i %i %i\n", source[0], source[1], source[2], source[3]);
+//	printf("rgba: %i %i %i %i\n", source[4], source[5], source[6], source[7]);
+	al_set_new_bitmap_format(ALLEGRO_PIXEL_FORMAT_ABGR_8888);
 	ALLEGRO_BITMAP* t = al_create_bitmap(source_dimensions.x, source_dimensions.y);
-	ALLEGRO_LOCKED_REGION* region = al_lock_bitmap(t, ALLEGRO_PIXEL_FORMAT_RGBA_8888, ALLEGRO_LOCK_WRITEONLY);
-
+	ALLEGRO_LOCKED_REGION* region = al_lock_bitmap(t, ALLEGRO_PIXEL_FORMAT_ABGR_8888, ALLEGRO_LOCK_WRITEONLY);
 	for(int y=0; y < source_dimensions.y; y++ ) {
 		std::memcpy((char*)region->data+y*region->pitch, (char*)source+y*source_dimensions.x*4, source_dimensions.x*4*sizeof(char));
 	}
 	al_unlock_bitmap(t);
 	texture_handle = (Rml::TextureHandle)al_get_opengl_texture(t);
 	textures[texture_handle] = t;
+//	al_save_bitmap("texture.png", t);
 	return true;
 }
 
