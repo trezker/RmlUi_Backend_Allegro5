@@ -6,7 +6,7 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 
-#include "htmlcontainer.h"
+#include "htmlpainter.h"
 
 void abort_dialog(char const *format, ...) {
 	char str[1024];
@@ -26,6 +26,11 @@ void abort_dialog(char const *format, ...) {
 	}
 	exit(1);
 }
+
+struct ApplicationData {
+	bool show_text = true;
+	Rml::String animal = "dog";
+} my_data;
 
 int main() {
 	ALLEGRO_DISPLAY *display;
@@ -63,7 +68,35 @@ int main() {
 
 	ALLEGRO_COLOR black = al_map_rgb_f(0, 0, 0);
 
-	htmlcontainer html;
+
+	AlRenderInterface render_interface;
+	AlSystemInterface system_interface;
+	//AlFontEngineInterface font_interface;
+
+	// Install the custom interfaces.
+	Rml::SetRenderInterface(&render_interface);
+	Rml::SetSystemInterface(&system_interface);
+	//Rml::SetFontEngineInterface(&font_interface);
+
+	// Now we can initialize RmlUi.
+	Rml::Initialise();
+
+	// Create a context to display documents within.
+	Rml::Context* context = Rml::CreateContext("main", Rml::Vector2i(width, height));
+	
+	// Tell RmlUi to load the given fonts.
+	Rml::LoadFontFace("data/LatoLatin-Regular.ttf");
+
+	// Set up data bindings to synchronize application data.
+	if (Rml::DataModelConstructor constructor = context->CreateDataModel("animals"))
+	{
+		constructor.Bind("show_text", &my_data.show_text);
+		constructor.Bind("animal", &my_data.animal);
+	}
+
+	// Now we are ready to load our document.
+	Rml::ElementDocument* document = context->LoadDocument("data/hello_world.rml");
+	document->Show();
 
 	int done = 0;
 	while(!done) {
@@ -75,10 +108,20 @@ int main() {
 			}
 		}
 		al_clear_to_color(black);
+		
+		// Update the context to reflect any changes resulting from input events, animations,
+		// modified and added elements, or changed data in data bindings.
+		context->Update();
+
+		// Render the user interface. All geometry and other rendering commands are now
+		// submitted through the render interface.
+		context->Render();
 
 		al_flip_display();
 		al_rest(0.001);
 	}
+	
+	Rml::Shutdown();
 
 	al_destroy_event_queue(queue);
 	al_destroy_display(display);
