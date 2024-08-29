@@ -63,26 +63,6 @@ int main() {
 		abort_dialog("Error creating display\n");
 	}
 
-	//TESTING
-	/*
-	al_set_new_bitmap_format(ALLEGRO_PIXEL_FORMAT_ABGR_8888);
-	ALLEGRO_BITMAP* t = al_create_bitmap(256, 32);
-	ALLEGRO_LOCKED_REGION* region = al_lock_bitmap(t, ALLEGRO_PIXEL_FORMAT_ABGR_8888, ALLEGRO_LOCK_WRITEONLY);
-	unsigned char source[1024];
-	for(int i = 0; i<256; ++i) {
-		source[i*4+0] = 255;		//A
-		source[i*4+1] = 255;	//B
-		source[i*4+2] = 255;		//G
-		source[i*4+3] = i;		//R
-	}
-	for(int y=0; y < 32; y++ ) {
-		std::memcpy((char*)region->data+y*region->pitch, (char*)source, 256*4*sizeof(char));
-	}
-	al_unlock_bitmap(t);
-	al_save_bitmap("texture.png", t);
-	*/
-	//END TESTING
-
 	queue = al_create_event_queue();
 	al_register_event_source(queue, al_get_mouse_event_source());
 	al_register_event_source(queue, al_get_keyboard_event_source());
@@ -90,15 +70,12 @@ int main() {
 
 	ALLEGRO_COLOR black = al_map_rgb_f(0, 0, 0);
 
-
 	AlRenderInterface render_interface;
 	AlSystemInterface system_interface;
-	//AlFontEngineInterface font_interface;
 
 	// Install the custom interfaces.
 	Rml::SetRenderInterface(&render_interface);
 	Rml::SetSystemInterface(&system_interface);
-	//Rml::SetFontEngineInterface(&font_interface);
 
 	// Now we can initialize RmlUi.
 	Rml::Initialise();

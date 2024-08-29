@@ -5,7 +5,6 @@
 #include <map>
 #include <allegro5/allegro.h>
 
-
 typedef std::map<Rml::TextureHandle, ALLEGRO_BITMAP*> Textures;
 
 class AlRenderInterface : public Rml::RenderInterface {
@@ -35,7 +34,3 @@ class AlSystemInterface : public Rml::SystemInterface {
 public:
 	virtual double GetElapsedTime();
 };
-/*
-class AlFontEngineInterface: public FontEngineInterface {
-public:
-};*/

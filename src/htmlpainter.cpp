@@ -10,25 +10,6 @@ void AlRenderInterface::RenderGeometry(Rml::Vertex* vertices,
 	Rml::TextureHandle texture,
 	const Rml::Vector2f& translation
 ) {
-	//TODO: https://liballeg.org/a5docs/trunk/primitives.html#al_draw_indexed_buffer
-	if(texture != 0) {
-		al_draw_bitmap(textures[texture], texture*256, 0, 0);
-	}
-	al_draw_filled_rectangle(0, 0, 100, 100, al_map_rgb_f(0,0,1));
-	//printf("Geo %i\n", num_vertices);
-	/*
-	for(int t=0; t<num_indices/3; ++t) {
-		float x1 = vertices[indices[t]].position.x + translation.x;
-		float y1 = vertices[indices[t]].position.y + translation.y;
-		float x2 = vertices[indices[t+1]].position.x + translation.x;
-		float y2 = vertices[indices[t+1]].position.y + translation.y;
-		float x3 = vertices[indices[t+2]].position.x + translation.x;
-		float y3 = vertices[indices[t+2]].position.y + translation.y;
-		Rml::Colour<unsigned char, 255> rc = vertices[indices[t]].colour;
-		ALLEGRO_COLOR color = al_map_rgba(rc.red, rc.green, rc.blue, rc.alpha);
-		al_draw_filled_triangle(x1, y1, x2, y2, x3, y3, color);
-	}
-	*/
 	ALLEGRO_VERTEX_BUFFER* vbuff;
 	ALLEGRO_INDEX_BUFFER* ibuff;
 	int ii;
@@ -83,21 +64,11 @@ void AlRenderInterface::RenderGeometry(Rml::Vertex* vertices,
 		al_unlock_index_buffer(ibuff);
 	}
 
-	//Theta += Speed;
-	//al_build_transform(&MainTrans, ScreenW / 2, ScreenH / 2, 1, 1, Theta);
-
-//	if (Blend)
-//		al_set_blender(ALLEGRO_ADD, ALLEGRO_ONE, ALLEGRO_ONE);
-//	else
-//		al_set_blender(ALLEGRO_ADD, ALLEGRO_ONE, ALLEGRO_ZERO);
 	al_set_blender(ALLEGRO_ADD, ALLEGRO_ALPHA, ALLEGRO_INVERSE_ALPHA);
-	//al_use_transform(&MainTrans);
 
 	if(vbuff && ibuff) {
 		al_draw_indexed_buffer(vbuff, textures[texture], ibuff, 0, num_indices, ALLEGRO_PRIM_TRIANGLE_LIST);
 	}
-
-	//al_use_transform(&Identity);
 
 	al_destroy_vertex_buffer(vbuff);
 	al_destroy_index_buffer(ibuff);
@@ -117,7 +88,6 @@ double AlSystemInterface::GetElapsedTime() {
 }
 
 bool AlRenderInterface::LoadTexture(Rml::TextureHandle& texture_handle, Rml::Vector2i& texture_dimensions, const Rml::String& source) {
-	printf("LoadTexture: %s\n", source.c_str());
 	ALLEGRO_BITMAP* t = al_load_bitmap(source.c_str());
 	texture_dimensions.x = al_get_bitmap_width(t);
 	texture_dimensions.y = al_get_bitmap_height(t);
@@ -128,9 +98,6 @@ bool AlRenderInterface::LoadTexture(Rml::TextureHandle& texture_handle, Rml::Vec
 }
 
 bool AlRenderInterface::GenerateTexture(Rml::TextureHandle& texture_handle, const Rml::byte* source, const Rml::Vector2i& source_dimensions) {
-//	printf("GenerateTexture: %i x %i\n", source_dimensions.x, source_dimensions.y);
-//	printf("rgba: %i %i %i %i\n", source[0], source[1], source[2], source[3]);
-//	printf("rgba: %i %i %i %i\n", source[4], source[5], source[6], source[7]);
 	al_set_new_bitmap_format(ALLEGRO_PIXEL_FORMAT_ABGR_8888);
 	ALLEGRO_BITMAP* t = al_create_bitmap(source_dimensions.x, source_dimensions.y);
 	ALLEGRO_LOCKED_REGION* region = al_lock_bitmap(t, ALLEGRO_PIXEL_FORMAT_ABGR_8888, ALLEGRO_LOCK_WRITEONLY);
@@ -140,12 +107,10 @@ bool AlRenderInterface::GenerateTexture(Rml::TextureHandle& texture_handle, cons
 	al_unlock_bitmap(t);
 	texture_handle = (Rml::TextureHandle)al_get_opengl_texture(t);
 	textures[texture_handle] = t;
-//	al_save_bitmap("texture.png", t);
 	return true;
 }
 
 void AlRenderInterface::ReleaseTexture(Rml::TextureHandle texture_handle) {
-	printf("ReleaseTexture\n");
 	al_destroy_bitmap(textures[texture_handle]);
 	textures[texture_handle] = NULL;
 }
