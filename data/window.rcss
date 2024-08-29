@@ -2,7 +2,7 @@ body {
 	font-family: LatoLatin;
 	font-size: 18px;
 	color: #02475e;
-	background: #1e1e1c;
+	background: #fefecc;
 	text-align: center;
 	padding: 2em 1em;
 	position: absolute;

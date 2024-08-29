@@ -90,7 +90,7 @@ void AlRenderInterface::RenderGeometry(Rml::Vertex* vertices,
 //		al_set_blender(ALLEGRO_ADD, ALLEGRO_ONE, ALLEGRO_ONE);
 //	else
 //		al_set_blender(ALLEGRO_ADD, ALLEGRO_ONE, ALLEGRO_ZERO);
-	al_set_blender(ALLEGRO_ADD, ALLEGRO_ALPHA, ALLEGRO_ONE);
+	al_set_blender(ALLEGRO_ADD, ALLEGRO_ALPHA, ALLEGRO_INVERSE_ALPHA);
 	//al_use_transform(&MainTrans);
 
 	if(vbuff && ibuff) {
