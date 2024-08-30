@@ -37,6 +37,8 @@ class AlSystemInterface : public Rml::SystemInterface {
 public:
 	virtual double GetElapsedTime();
 	void SetMouseCursor(const Rml::String& cursor_name) override;
+	void SetClipboardText(const Rml::String& text) override;
+	void GetClipboardText(Rml::String& text) override;
 };
 
 // Applies input on the context based on the given Allegro event.

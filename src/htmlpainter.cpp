@@ -144,6 +144,16 @@ void AlSystemInterface::SetMouseCursor(const Rml::String& cursor_name) {
 		al_set_system_mouse_cursor(al_get_current_display(), ALLEGRO_SYSTEM_MOUSE_CURSOR_MOVE);
 }
 
+void AlSystemInterface::SetClipboardText(const Rml::String& text_utf8) {
+	al_set_clipboard_text(al_get_current_display(), text_utf8.c_str());
+}
+
+void AlSystemInterface::GetClipboardText(Rml::String& text) {
+	char* raw_text = al_get_clipboard_text(al_get_current_display());
+	text = Rml::String(raw_text);
+	al_free(raw_text);
+}
+
 bool InputEventHandler(Rml::Context* context, ALLEGRO_EVENT& ev) {
 	bool result = true;
 
