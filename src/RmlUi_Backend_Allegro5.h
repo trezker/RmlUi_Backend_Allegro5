@@ -7,7 +7,7 @@
 
 typedef std::map<Rml::TextureHandle, ALLEGRO_BITMAP*> Textures;
 
-class AlRenderInterface : public Rml::RenderInterface {
+class RenderInterface_Allegro5 : public Rml::RenderInterface {
 private:
 	bool scissor_region_enabled = false;
 	int clipx, clipy, clipw, cliph;
@@ -33,7 +33,7 @@ public:
 	void ReleaseTexture(Rml::TextureHandle texture_handle) override;
 };
 
-class AlSystemInterface : public Rml::SystemInterface {
+class SystemInterface_Allegro5 : public Rml::SystemInterface {
 public:
 	double GetElapsedTime();
 	void SetMouseCursor(const Rml::String& cursor_name) override;
@@ -43,13 +43,4 @@ public:
 
 // Applies input on the context based on the given Allegro event.
 // @return True if the event is still propagating, false if it was handled by the context.
-bool InputEventHandler(Rml::Context* context, ALLEGRO_EVENT& ev);
-
-// Converts the Allegro key to RmlUi key.
-Rml::Input::KeyIdentifier ConvertKey(int al_key);
-
-// Converts the Allegro mouse button to RmlUi mouse button.
-int ConvertMouseButton(int sdl_mouse_button);
-
-// Returns the active RmlUi key modifier state.
-int GetKeyModifierState();
+bool RmlAllegroInputEventHandler(Rml::Context* context, ALLEGRO_EVENT& ev);

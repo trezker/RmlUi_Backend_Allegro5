@@ -70,8 +70,8 @@ int main() {
 
 	ALLEGRO_COLOR black = al_map_rgb_f(0, 0, 0);
 
-	AlRenderInterface render_interface;
-	AlSystemInterface system_interface;
+	RenderInterface_Allegro5 render_interface;
+	SystemInterface_Allegro5 system_interface;
 
 	// Install the custom interfaces.
 	Rml::SetRenderInterface(&render_interface);
@@ -100,7 +100,7 @@ int main() {
 	int done = 0;
 	while(!done) {
 		while(al_get_next_event(queue, &event)) {
-			if(!InputEventHandler(context, event))
+			if(!RmlAllegroInputEventHandler(context, event))
 				continue;
 
 			switch(event.type) {

@@ -3,7 +3,7 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_opengl.h>
 
-void AlRenderInterface::RenderGeometry(Rml::Vertex* vertices,
+void RenderInterface_Allegro5::RenderGeometry(Rml::Vertex* vertices,
 	int num_vertices,
 	int* indices,
 	int num_indices,
@@ -74,7 +74,7 @@ void AlRenderInterface::RenderGeometry(Rml::Vertex* vertices,
 	al_destroy_index_buffer(ibuff);
 }
 
-void AlRenderInterface::EnableScissorRegion(bool enable) {
+void RenderInterface_Allegro5::EnableScissorRegion(bool enable) {
 	if (enable)
 		al_set_clipping_rectangle(clipx, clipy, clipw, cliph);
 	else
@@ -83,7 +83,7 @@ void AlRenderInterface::EnableScissorRegion(bool enable) {
 	scissor_region_enabled = enable;
 }
 
-void AlRenderInterface::SetScissorRegion(int x, int y, int width, int height) {
+void RenderInterface_Allegro5::SetScissorRegion(int x, int y, int width, int height) {
 	clipx = x;
 	clipy = y;
 	clipw = width;
@@ -93,7 +93,7 @@ void AlRenderInterface::SetScissorRegion(int x, int y, int width, int height) {
 		al_set_clipping_rectangle(clipx, clipy, clipw, cliph);
 }
 
-bool AlRenderInterface::LoadTexture(Rml::TextureHandle& texture_handle, Rml::Vector2i& texture_dimensions, const Rml::String& source) {
+bool RenderInterface_Allegro5::LoadTexture(Rml::TextureHandle& texture_handle, Rml::Vector2i& texture_dimensions, const Rml::String& source) {
 	ALLEGRO_BITMAP* t = al_load_bitmap(source.c_str());
 	texture_dimensions.x = al_get_bitmap_width(t);
 	texture_dimensions.y = al_get_bitmap_height(t);
@@ -103,7 +103,7 @@ bool AlRenderInterface::LoadTexture(Rml::TextureHandle& texture_handle, Rml::Vec
 	return true;
 }
 
-bool AlRenderInterface::GenerateTexture(Rml::TextureHandle& texture_handle, const Rml::byte* source, const Rml::Vector2i& source_dimensions) {
+bool RenderInterface_Allegro5::GenerateTexture(Rml::TextureHandle& texture_handle, const Rml::byte* source, const Rml::Vector2i& source_dimensions) {
 	al_set_new_bitmap_format(ALLEGRO_PIXEL_FORMAT_ABGR_8888);
 	ALLEGRO_BITMAP* t = al_create_bitmap(source_dimensions.x, source_dimensions.y);
 	ALLEGRO_LOCKED_REGION* region = al_lock_bitmap(t, ALLEGRO_PIXEL_FORMAT_ABGR_8888, ALLEGRO_LOCK_WRITEONLY);
@@ -116,16 +116,16 @@ bool AlRenderInterface::GenerateTexture(Rml::TextureHandle& texture_handle, cons
 	return true;
 }
 
-void AlRenderInterface::ReleaseTexture(Rml::TextureHandle texture_handle) {
+void RenderInterface_Allegro5::ReleaseTexture(Rml::TextureHandle texture_handle) {
 	al_destroy_bitmap(textures[texture_handle]);
 	textures[texture_handle] = NULL;
 }
 
-double AlSystemInterface::GetElapsedTime() {
+double SystemInterface_Allegro5::GetElapsedTime() {
 	return al_get_time();
 }
 
-void AlSystemInterface::SetMouseCursor(const Rml::String& cursor_name) {
+void SystemInterface_Allegro5::SetMouseCursor(const Rml::String& cursor_name) {
 	if (cursor_name.empty() || cursor_name == "arrow")
 		al_set_system_mouse_cursor(al_get_current_display(), ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT);
 	else if (cursor_name == "move")
@@ -144,60 +144,14 @@ void AlSystemInterface::SetMouseCursor(const Rml::String& cursor_name) {
 		al_set_system_mouse_cursor(al_get_current_display(), ALLEGRO_SYSTEM_MOUSE_CURSOR_MOVE);
 }
 
-void AlSystemInterface::SetClipboardText(const Rml::String& text_utf8) {
+void SystemInterface_Allegro5::SetClipboardText(const Rml::String& text_utf8) {
 	al_set_clipboard_text(al_get_current_display(), text_utf8.c_str());
 }
 
-void AlSystemInterface::GetClipboardText(Rml::String& text) {
+void SystemInterface_Allegro5::GetClipboardText(Rml::String& text) {
 	char* raw_text = al_get_clipboard_text(al_get_current_display());
 	text = Rml::String(raw_text);
 	al_free(raw_text);
-}
-
-bool InputEventHandler(Rml::Context* context, ALLEGRO_EVENT& ev) {
-	bool result = true;
-
-	switch (ev.type) {
-		case ALLEGRO_EVENT_MOUSE_AXES: {
-			if(ev.mouse.dx || ev.mouse.dy)
-				result = context->ProcessMouseMove(ev.mouse.dx, ev.mouse.dy, GetKeyModifierState());
-			if(ev.mouse.dz)
-				result = context->ProcessMouseWheel(float(-ev.mouse.dz), GetKeyModifierState());
-			}
-			break;
-		case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
-			result = context->ProcessMouseButtonDown(ConvertMouseButton(ev.mouse.button), GetKeyModifierState());
-			break;
-		case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
-			result = context->ProcessMouseButtonUp(ConvertMouseButton(ev.mouse.button), GetKeyModifierState());
-			break;
-		case ALLEGRO_EVENT_KEY_DOWN:
-			result = context->ProcessKeyDown(ConvertKey(ev.keyboard.keycode), GetKeyModifierState());
-			if (ev.keyboard.keycode == ALLEGRO_KEY_ENTER || ev.keyboard.keycode == ALLEGRO_KEY_PAD_ENTER)
-				result &= context->ProcessTextInput('\n');
-			break;
-		case ALLEGRO_EVENT_KEY_UP:
-			result = context->ProcessKeyUp(ConvertKey(ev.keyboard.keycode), GetKeyModifierState());
-			break;
-		case ALLEGRO_EVENT_KEY_CHAR: {
-			ALLEGRO_USTR *str = al_ustr_new("");
-			al_ustr_append_chr(str, ev.keyboard.unichar);
-			result = context->ProcessTextInput(Rml::String(al_cstr(str)));
-			al_ustr_free(str);
-			}
-			break;
-		case ALLEGRO_EVENT_DISPLAY_RESIZE: {
-			Rml::Vector2i dimensions(ev.display.width, ev.display.height);
-			context->SetDimensions(dimensions);
-			}
-			break;
-		case ALLEGRO_EVENT_MOUSE_LEAVE_DISPLAY:
-			context->ProcessMouseLeave();
-			break;
-		default: break;
-	}
-
-	return result;
 }
 
 Rml::Input::KeyIdentifier ConvertKey(int al_key) {
@@ -354,4 +308,50 @@ int GetKeyModifierState() {
 		retval |= Rml::Input::KM_CAPSLOCK;
 */
 	return retval;
+}
+
+bool RmlAllegroInputEventHandler(Rml::Context* context, ALLEGRO_EVENT& ev) {
+	bool result = true;
+
+	switch (ev.type) {
+		case ALLEGRO_EVENT_MOUSE_AXES: {
+			if(ev.mouse.dx || ev.mouse.dy)
+				result = context->ProcessMouseMove(ev.mouse.dx, ev.mouse.dy, GetKeyModifierState());
+			if(ev.mouse.dz)
+				result = context->ProcessMouseWheel(float(-ev.mouse.dz), GetKeyModifierState());
+			}
+			break;
+		case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
+			result = context->ProcessMouseButtonDown(ConvertMouseButton(ev.mouse.button), GetKeyModifierState());
+			break;
+		case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
+			result = context->ProcessMouseButtonUp(ConvertMouseButton(ev.mouse.button), GetKeyModifierState());
+			break;
+		case ALLEGRO_EVENT_KEY_DOWN:
+			result = context->ProcessKeyDown(ConvertKey(ev.keyboard.keycode), GetKeyModifierState());
+			if (ev.keyboard.keycode == ALLEGRO_KEY_ENTER || ev.keyboard.keycode == ALLEGRO_KEY_PAD_ENTER)
+				result &= context->ProcessTextInput('\n');
+			break;
+		case ALLEGRO_EVENT_KEY_UP:
+			result = context->ProcessKeyUp(ConvertKey(ev.keyboard.keycode), GetKeyModifierState());
+			break;
+		case ALLEGRO_EVENT_KEY_CHAR: {
+			ALLEGRO_USTR *str = al_ustr_new("");
+			al_ustr_append_chr(str, ev.keyboard.unichar);
+			result = context->ProcessTextInput(Rml::String(al_cstr(str)));
+			al_ustr_free(str);
+			}
+			break;
+		case ALLEGRO_EVENT_DISPLAY_RESIZE: {
+			Rml::Vector2i dimensions(ev.display.width, ev.display.height);
+			context->SetDimensions(dimensions);
+			}
+			break;
+		case ALLEGRO_EVENT_MOUSE_LEAVE_DISPLAY:
+			context->ProcessMouseLeave();
+			break;
+		default: break;
+	}
+
+	return result;
 }
