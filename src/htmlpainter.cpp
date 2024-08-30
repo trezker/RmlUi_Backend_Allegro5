@@ -75,16 +75,22 @@ void AlRenderInterface::RenderGeometry(Rml::Vertex* vertices,
 }
 
 void AlRenderInterface::EnableScissorRegion(bool enable) {
-	//TODO: See SDL backend for example
-//	printf("EnableScissorRegion\n");
+	if (enable)
+		al_set_clipping_rectangle(clipx, clipy, clipw, cliph);
+	else
+		al_reset_clipping_rectangle();
+
+	scissor_region_enabled = enable;
 }
 
 void AlRenderInterface::SetScissorRegion(int x, int y, int width, int height) {
-//	printf("SetScissorRegion\n");
-}
+	clipx = x;
+	clipy = y;
+	clipw = width;
+	cliph = height;
 
-double AlSystemInterface::GetElapsedTime() {
-	return 0;
+	if (scissor_region_enabled)
+		al_set_clipping_rectangle(clipx, clipy, clipw, cliph);
 }
 
 bool AlRenderInterface::LoadTexture(Rml::TextureHandle& texture_handle, Rml::Vector2i& texture_dimensions, const Rml::String& source) {
@@ -113,4 +119,8 @@ bool AlRenderInterface::GenerateTexture(Rml::TextureHandle& texture_handle, cons
 void AlRenderInterface::ReleaseTexture(Rml::TextureHandle texture_handle) {
 	al_destroy_bitmap(textures[texture_handle]);
 	textures[texture_handle] = NULL;
+}
+
+double AlSystemInterface::GetElapsedTime() {
+	return 0;
 }

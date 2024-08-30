@@ -8,6 +8,9 @@
 typedef std::map<Rml::TextureHandle, ALLEGRO_BITMAP*> Textures;
 
 class AlRenderInterface : public Rml::RenderInterface {
+private:
+	bool scissor_region_enabled = false;
+	int clipx, clipy, clipw, cliph;
 public:
 	Textures textures;
 
