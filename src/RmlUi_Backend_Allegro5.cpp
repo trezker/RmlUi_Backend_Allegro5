@@ -149,6 +149,8 @@ void SystemInterface_Allegro5::SetClipboardText(const Rml::String& text_utf8) {
 }
 
 void SystemInterface_Allegro5::GetClipboardText(Rml::String& text) {
+	if(!al_clipboard_has_text(al_get_current_display()))
+		return;
 	char* raw_text = al_get_clipboard_text(al_get_current_display());
 	text = Rml::String(raw_text);
 	al_free(raw_text);
