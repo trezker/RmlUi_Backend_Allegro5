@@ -7,7 +7,7 @@
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_image.h>
 
-#include "htmlpainter.h"
+#include "RmlUi_Backend_Allegro5.h"
 
 void abort_dialog(char const *format, ...) {
 	char str[1024];

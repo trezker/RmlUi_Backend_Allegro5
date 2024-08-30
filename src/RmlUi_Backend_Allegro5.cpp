@@ -1,4 +1,4 @@
-#include "htmlpainter.h"
+#include "RmlUi_Backend_Allegro5.h"
 #include <RmlUi/Core.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_opengl.h>
