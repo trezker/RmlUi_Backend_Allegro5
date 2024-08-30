@@ -104,6 +104,9 @@ int main() {
 				case ALLEGRO_EVENT_DISPLAY_CLOSE:
 					done = 1;
 					break;
+				case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
+					printf("button: %i\n", event.mouse.button);
+					break;
 			}
 		}
 		al_clear_to_color(black);

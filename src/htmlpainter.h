@@ -37,3 +37,16 @@ class AlSystemInterface : public Rml::SystemInterface {
 public:
 	virtual double GetElapsedTime();
 };
+
+// Applies input on the context based on the given Allegro event.
+// @return True if the event is still propagating, false if it was handled by the context.
+bool InputEventHandler(Rml::Context* context, ALLEGRO_EVENT& ev);
+
+// Converts the Allegro key to RmlUi key.
+Rml::Input::KeyIdentifier ConvertKey(int al_key);
+
+// Converts the Allegro mouse button to RmlUi mouse button.
+int ConvertMouseButton(int sdl_mouse_button);
+
+// Returns the active RmlUi key modifier state.
+int GetKeyModifierState();

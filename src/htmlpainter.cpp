@@ -124,3 +124,203 @@ void AlRenderInterface::ReleaseTexture(Rml::TextureHandle texture_handle) {
 double AlSystemInterface::GetElapsedTime() {
 	return 0;
 }
+
+bool InputEventHandler(Rml::Context* context, ALLEGRO_EVENT& ev) {
+	bool result = true;
+
+	switch (ev.type) {
+		/*
+		case SDL_MOUSEMOTION: result = context->ProcessMouseMove(ev.motion.x, ev.motion.y, GetKeyModifierState()); break;
+		case SDL_MOUSEBUTTONDOWN:
+			result = context->ProcessMouseButtonDown(ConvertMouseButton(ev.button.button), GetKeyModifierState());
+			SDL_CaptureMouse(SDL_TRUE);
+			break;
+		case SDL_MOUSEBUTTONUP:
+			SDL_CaptureMouse(SDL_FALSE);
+			result = context->ProcessMouseButtonUp(ConvertMouseButton(ev.button.button), GetKeyModifierState());
+			break;
+		case SDL_MOUSEWHEEL: result = context->ProcessMouseWheel(float(-ev.wheel.y), GetKeyModifierState()); break;
+		case SDL_KEYDOWN:
+			result = context->ProcessKeyDown(ConvertKey(ev.key.keysym.sym), GetKeyModifierState());
+			if (ev.key.keysym.sym == ALLEGRO_KEY_RETURN || ev.key.keysym.sym == ALLEGRO_KEY_KP_ENTER)
+				result &= context->ProcessTextInput('\n');
+			break;
+		case SDL_KEYUP: result = context->ProcessKeyUp(ConvertKey(ev.key.keysym.sym), GetKeyModifierState()); break;
+		case SDL_TEXTINPUT: result = context->ProcessTextInput(Rml::String(&ev.text.text[0])); break;
+		case SDL_WINDOWEVENT:
+		{
+			switch (ev.window.event)
+			{
+			case SDL_WINDOWEVENT_SIZE_CHANGED:
+			{
+				Rml::Vector2i dimensions(ev.window.data1, ev.window.data2);
+				context->SetDimensions(dimensions);
+			}
+			break;
+			case SDL_WINDOWEVENT_LEAVE: context->ProcessMouseLeave(); break;
+			}
+		}
+		break;
+		*/
+		default: break;
+	}
+
+	return result;
+}
+
+Rml::Input::KeyIdentifier ConvertKey(int al_key) {
+	switch (al_key) {
+		case ALLEGRO_KEY_UNKNOWN:      return Rml::Input::KI_UNKNOWN;
+		case ALLEGRO_KEY_ESCAPE:       return Rml::Input::KI_ESCAPE;
+		case ALLEGRO_KEY_SPACE:        return Rml::Input::KI_SPACE;
+		case ALLEGRO_KEY_0:            return Rml::Input::KI_0;
+		case ALLEGRO_KEY_1:            return Rml::Input::KI_1;
+		case ALLEGRO_KEY_2:            return Rml::Input::KI_2;
+		case ALLEGRO_KEY_3:            return Rml::Input::KI_3;
+		case ALLEGRO_KEY_4:            return Rml::Input::KI_4;
+		case ALLEGRO_KEY_5:            return Rml::Input::KI_5;
+		case ALLEGRO_KEY_6:            return Rml::Input::KI_6;
+		case ALLEGRO_KEY_7:            return Rml::Input::KI_7;
+		case ALLEGRO_KEY_8:            return Rml::Input::KI_8;
+		case ALLEGRO_KEY_9:            return Rml::Input::KI_9;
+		case ALLEGRO_KEY_A:            return Rml::Input::KI_A;
+		case ALLEGRO_KEY_B:            return Rml::Input::KI_B;
+		case ALLEGRO_KEY_C:            return Rml::Input::KI_C;
+		case ALLEGRO_KEY_D:            return Rml::Input::KI_D;
+		case ALLEGRO_KEY_E:            return Rml::Input::KI_E;
+		case ALLEGRO_KEY_F:            return Rml::Input::KI_F;
+		case ALLEGRO_KEY_G:            return Rml::Input::KI_G;
+		case ALLEGRO_KEY_H:            return Rml::Input::KI_H;
+		case ALLEGRO_KEY_I:            return Rml::Input::KI_I;
+		case ALLEGRO_KEY_J:            return Rml::Input::KI_J;
+		case ALLEGRO_KEY_K:            return Rml::Input::KI_K;
+		case ALLEGRO_KEY_L:            return Rml::Input::KI_L;
+		case ALLEGRO_KEY_M:            return Rml::Input::KI_M;
+		case ALLEGRO_KEY_N:            return Rml::Input::KI_N;
+		case ALLEGRO_KEY_O:            return Rml::Input::KI_O;
+		case ALLEGRO_KEY_P:            return Rml::Input::KI_P;
+		case ALLEGRO_KEY_Q:            return Rml::Input::KI_Q;
+		case ALLEGRO_KEY_R:            return Rml::Input::KI_R;
+		case ALLEGRO_KEY_S:            return Rml::Input::KI_S;
+		case ALLEGRO_KEY_T:            return Rml::Input::KI_T;
+		case ALLEGRO_KEY_U:            return Rml::Input::KI_U;
+		case ALLEGRO_KEY_V:            return Rml::Input::KI_V;
+		case ALLEGRO_KEY_W:            return Rml::Input::KI_W;
+		case ALLEGRO_KEY_X:            return Rml::Input::KI_X;
+		case ALLEGRO_KEY_Y:            return Rml::Input::KI_Y;
+		case ALLEGRO_KEY_Z:            return Rml::Input::KI_Z;
+		case ALLEGRO_KEY_SEMICOLON:    return Rml::Input::KI_OEM_1;
+		//case ALLEGRO_KEY_PLUS:         return Rml::Input::KI_OEM_PLUS;
+		case ALLEGRO_KEY_COMMA:        return Rml::Input::KI_OEM_COMMA;
+		case ALLEGRO_KEY_MINUS:        return Rml::Input::KI_OEM_MINUS;
+		case ALLEGRO_KEY_FULLSTOP:     return Rml::Input::KI_OEM_PERIOD; //?
+		case ALLEGRO_KEY_SLASH:        return Rml::Input::KI_OEM_2;
+		case ALLEGRO_KEY_BACKQUOTE:    return Rml::Input::KI_OEM_3;
+		case ALLEGRO_KEY_OPENBRACE:    return Rml::Input::KI_OEM_4; //?
+		case ALLEGRO_KEY_BACKSLASH:    return Rml::Input::KI_OEM_5;
+		case ALLEGRO_KEY_CLOSEBRACE:   return Rml::Input::KI_OEM_6; //?
+		//case ALLEGRO_KEY_QUOTEDBL:     return Rml::Input::KI_OEM_7;
+		case ALLEGRO_KEY_PAD_0:        return Rml::Input::KI_NUMPAD0;
+		case ALLEGRO_KEY_PAD_1:        return Rml::Input::KI_NUMPAD1;
+		case ALLEGRO_KEY_PAD_2:        return Rml::Input::KI_NUMPAD2;
+		case ALLEGRO_KEY_PAD_3:        return Rml::Input::KI_NUMPAD3;
+		case ALLEGRO_KEY_PAD_4:        return Rml::Input::KI_NUMPAD4;
+		case ALLEGRO_KEY_PAD_5:        return Rml::Input::KI_NUMPAD5;
+		case ALLEGRO_KEY_PAD_6:        return Rml::Input::KI_NUMPAD6;
+		case ALLEGRO_KEY_PAD_7:        return Rml::Input::KI_NUMPAD7;
+		case ALLEGRO_KEY_PAD_8:        return Rml::Input::KI_NUMPAD8;
+		case ALLEGRO_KEY_PAD_9:        return Rml::Input::KI_NUMPAD9;
+		case ALLEGRO_KEY_PAD_ENTER:    return Rml::Input::KI_NUMPADENTER;
+		case ALLEGRO_KEY_PAD_ASTERISK: return Rml::Input::KI_MULTIPLY;
+		case ALLEGRO_KEY_PAD_PLUS:     return Rml::Input::KI_ADD;
+		case ALLEGRO_KEY_PAD_MINUS:    return Rml::Input::KI_SUBTRACT;
+		case ALLEGRO_KEY_PAD_DELETE:   return Rml::Input::KI_DECIMAL; //?
+		case ALLEGRO_KEY_PAD_SLASH:    return Rml::Input::KI_DIVIDE;
+		case ALLEGRO_KEY_PAD_EQUALS:   return Rml::Input::KI_OEM_NEC_EQUAL;
+		case ALLEGRO_KEY_BACKSPACE:    return Rml::Input::KI_BACK;
+		case ALLEGRO_KEY_TAB:          return Rml::Input::KI_TAB;
+		//case ALLEGRO_KEY_CLEAR:        return Rml::Input::KI_CLEAR;
+		case ALLEGRO_KEY_ENTER:        return Rml::Input::KI_RETURN;
+		case ALLEGRO_KEY_PAUSE:        return Rml::Input::KI_PAUSE;
+		case ALLEGRO_KEY_CAPSLOCK:     return Rml::Input::KI_CAPITAL;
+		case ALLEGRO_KEY_PGUP:         return Rml::Input::KI_PRIOR;
+		case ALLEGRO_KEY_PGDN:         return Rml::Input::KI_NEXT;
+		case ALLEGRO_KEY_END:          return Rml::Input::KI_END;
+		case ALLEGRO_KEY_HOME:         return Rml::Input::KI_HOME;
+		case ALLEGRO_KEY_LEFT:         return Rml::Input::KI_LEFT;
+		case ALLEGRO_KEY_UP:           return Rml::Input::KI_UP;
+		case ALLEGRO_KEY_RIGHT:        return Rml::Input::KI_RIGHT;
+		case ALLEGRO_KEY_DOWN:         return Rml::Input::KI_DOWN;
+		case ALLEGRO_KEY_INSERT:       return Rml::Input::KI_INSERT;
+		case ALLEGRO_KEY_DELETE:       return Rml::Input::KI_DELETE;
+		//case ALLEGRO_KEY_HELP:         return Rml::Input::KI_HELP;
+		case ALLEGRO_KEY_F1:           return Rml::Input::KI_F1;
+		case ALLEGRO_KEY_F2:           return Rml::Input::KI_F2;
+		case ALLEGRO_KEY_F3:           return Rml::Input::KI_F3;
+		case ALLEGRO_KEY_F4:           return Rml::Input::KI_F4;
+		case ALLEGRO_KEY_F5:           return Rml::Input::KI_F5;
+		case ALLEGRO_KEY_F6:           return Rml::Input::KI_F6;
+		case ALLEGRO_KEY_F7:           return Rml::Input::KI_F7;
+		case ALLEGRO_KEY_F8:           return Rml::Input::KI_F8;
+		case ALLEGRO_KEY_F9:           return Rml::Input::KI_F9;
+		case ALLEGRO_KEY_F10:          return Rml::Input::KI_F10;
+		case ALLEGRO_KEY_F11:          return Rml::Input::KI_F11;
+		case ALLEGRO_KEY_F12:          return Rml::Input::KI_F12;
+		/*
+		case ALLEGRO_KEY_F13:          return Rml::Input::KI_F13;
+		case ALLEGRO_KEY_F14:          return Rml::Input::KI_F14;
+		case ALLEGRO_KEY_F15:          return Rml::Input::KI_F15;
+		*/
+		case ALLEGRO_KEY_NUMLOCK:      return Rml::Input::KI_NUMLOCK;
+		case ALLEGRO_KEY_SCROLLLOCK:   return Rml::Input::KI_SCROLL;
+		case ALLEGRO_KEY_LSHIFT:       return Rml::Input::KI_LSHIFT;
+		case ALLEGRO_KEY_RSHIFT:       return Rml::Input::KI_RSHIFT;
+		case ALLEGRO_KEY_LCTRL:        return Rml::Input::KI_LCONTROL;
+		case ALLEGRO_KEY_RCTRL:        return Rml::Input::KI_RCONTROL;
+		case ALLEGRO_KEY_ALT:          return Rml::Input::KI_LMENU;
+		case ALLEGRO_KEY_ALTGR:        return Rml::Input::KI_RMENU;
+		/*
+		case ALLEGRO_KEY_LGUI:         return Rml::Input::KI_LMETA;
+		case ALLEGRO_KEY_RGUI:         return Rml::Input::KI_RMETA;
+		*/
+		case ALLEGRO_KEY_LWIN:          return Rml::Input::KI_LWIN;
+		case ALLEGRO_KEY_RWIN:         return Rml::Input::KI_RWIN;
+		default: break;
+	}
+
+	return Rml::Input::KI_UNKNOWN;
+}
+
+int ConvertMouseButton(int button) {
+	switch (button) {
+		case 1: return 0; //Left
+		case 2: return 1; //Right
+		case 3: return 2; //Middle
+		default: return 3;
+	}
+}
+
+int GetKeyModifierState() {
+	return 0;
+	/*
+	SDL_Keymod sdl_mods = SDL_GetModState();
+
+	int retval = 0;
+
+	if (sdl_mods & KMOD_CTRL)
+		retval |= Rml::Input::KM_CTRL;
+
+	if (sdl_mods & KMOD_SHIFT)
+		retval |= Rml::Input::KM_SHIFT;
+
+	if (sdl_mods & KMOD_ALT)
+		retval |= Rml::Input::KM_ALT;
+
+	if (sdl_mods & KMOD_NUM)
+		retval |= Rml::Input::KM_NUMLOCK;
+
+	if (sdl_mods & KMOD_CAPS)
+		retval |= Rml::Input::KM_CAPSLOCK;
+
+	return retval;*/
+}
