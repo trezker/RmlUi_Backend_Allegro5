@@ -129,39 +129,42 @@ bool InputEventHandler(Rml::Context* context, ALLEGRO_EVENT& ev) {
 	bool result = true;
 
 	switch (ev.type) {
-		/*
-		case SDL_MOUSEMOTION: result = context->ProcessMouseMove(ev.motion.x, ev.motion.y, GetKeyModifierState()); break;
-		case SDL_MOUSEBUTTONDOWN:
-			result = context->ProcessMouseButtonDown(ConvertMouseButton(ev.button.button), GetKeyModifierState());
-			SDL_CaptureMouse(SDL_TRUE);
+		case ALLEGRO_EVENT_MOUSE_AXES: {
+			if(ev.mouse.dx || ev.mouse.dy)
+				result = context->ProcessMouseMove(ev.mouse.dx, ev.mouse.dy, GetKeyModifierState());
+			if(ev.mouse.dz)
+				result = context->ProcessMouseWheel(float(-ev.mouse.dz), GetKeyModifierState());
+			}
 			break;
-		case SDL_MOUSEBUTTONUP:
-			SDL_CaptureMouse(SDL_FALSE);
-			result = context->ProcessMouseButtonUp(ConvertMouseButton(ev.button.button), GetKeyModifierState());
+		case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
+			result = context->ProcessMouseButtonDown(ConvertMouseButton(ev.mouse.button), GetKeyModifierState());
 			break;
-		case SDL_MOUSEWHEEL: result = context->ProcessMouseWheel(float(-ev.wheel.y), GetKeyModifierState()); break;
-		case SDL_KEYDOWN:
-			result = context->ProcessKeyDown(ConvertKey(ev.key.keysym.sym), GetKeyModifierState());
-			if (ev.key.keysym.sym == ALLEGRO_KEY_RETURN || ev.key.keysym.sym == ALLEGRO_KEY_KP_ENTER)
+		case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
+			result = context->ProcessMouseButtonUp(ConvertMouseButton(ev.mouse.button), GetKeyModifierState());
+			break;
+		case ALLEGRO_EVENT_KEY_DOWN:
+			result = context->ProcessKeyDown(ConvertKey(ev.keyboard.keycode), GetKeyModifierState());
+			if (ev.keyboard.keycode == ALLEGRO_KEY_ENTER || ev.keyboard.keycode == ALLEGRO_KEY_PAD_ENTER)
 				result &= context->ProcessTextInput('\n');
 			break;
-		case SDL_KEYUP: result = context->ProcessKeyUp(ConvertKey(ev.key.keysym.sym), GetKeyModifierState()); break;
-		case SDL_TEXTINPUT: result = context->ProcessTextInput(Rml::String(&ev.text.text[0])); break;
-		case SDL_WINDOWEVENT:
-		{
-			switch (ev.window.event)
-			{
-			case SDL_WINDOWEVENT_SIZE_CHANGED:
-			{
-				Rml::Vector2i dimensions(ev.window.data1, ev.window.data2);
-				context->SetDimensions(dimensions);
+		case ALLEGRO_EVENT_KEY_UP:
+			result = context->ProcessKeyUp(ConvertKey(ev.keyboard.keycode), GetKeyModifierState());
+			break;
+		case ALLEGRO_EVENT_KEY_CHAR: {
+			ALLEGRO_USTR *str = al_ustr_new("");
+			al_ustr_append_chr(str, ev.keyboard.unichar);
+			result = context->ProcessTextInput(Rml::String(al_cstr(str)));
+			al_ustr_free(str);
 			}
 			break;
-			case SDL_WINDOWEVENT_LEAVE: context->ProcessMouseLeave(); break;
+		case ALLEGRO_EVENT_DISPLAY_RESIZE: {
+			Rml::Vector2i dimensions(ev.display.width, ev.display.height);
+			context->SetDimensions(dimensions);
 			}
-		}
-		break;
-		*/
+			break;
+		case ALLEGRO_EVENT_MOUSE_LEAVE_DISPLAY:
+			context->ProcessMouseLeave();
+			break;
 		default: break;
 	}
 

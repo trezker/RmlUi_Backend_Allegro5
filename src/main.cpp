@@ -100,12 +100,12 @@ int main() {
 	int done = 0;
 	while(!done) {
 		while(al_get_next_event(queue, &event)) {
+			if(!InputEventHandler(context, event))
+				continue;
+
 			switch(event.type) {
 				case ALLEGRO_EVENT_DISPLAY_CLOSE:
 					done = 1;
-					break;
-				case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
-					printf("button: %i\n", event.mouse.button);
 					break;
 			}
 		}
