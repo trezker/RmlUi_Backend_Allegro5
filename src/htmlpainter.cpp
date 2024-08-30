@@ -122,7 +122,26 @@ void AlRenderInterface::ReleaseTexture(Rml::TextureHandle texture_handle) {
 }
 
 double AlSystemInterface::GetElapsedTime() {
-	return 0;
+	return al_get_time();
+}
+
+void AlSystemInterface::SetMouseCursor(const Rml::String& cursor_name) {
+	if (cursor_name.empty() || cursor_name == "arrow")
+		al_set_system_mouse_cursor(al_get_current_display(), ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT);
+	else if (cursor_name == "move")
+		al_set_system_mouse_cursor(al_get_current_display(), ALLEGRO_SYSTEM_MOUSE_CURSOR_MOVE);
+	else if (cursor_name == "pointer")
+		al_set_system_mouse_cursor(al_get_current_display(), ALLEGRO_SYSTEM_MOUSE_CURSOR_ARROW);
+	else if (cursor_name == "resize")
+		al_set_system_mouse_cursor(al_get_current_display(), ALLEGRO_SYSTEM_MOUSE_CURSOR_RESIZE_NE);
+	else if (cursor_name == "cross")
+		al_set_system_mouse_cursor(al_get_current_display(), ALLEGRO_SYSTEM_MOUSE_CURSOR_PRECISION);
+	else if (cursor_name == "text")
+		al_set_system_mouse_cursor(al_get_current_display(), ALLEGRO_SYSTEM_MOUSE_CURSOR_EDIT);
+	else if (cursor_name == "unavailable")
+		al_set_system_mouse_cursor(al_get_current_display(), ALLEGRO_SYSTEM_MOUSE_CURSOR_UNAVAILABLE);
+	else if (Rml::StringUtilities::StartsWith(cursor_name, "rmlui-scroll"))
+		al_set_system_mouse_cursor(al_get_current_display(), ALLEGRO_SYSTEM_MOUSE_CURSOR_MOVE);
 }
 
 bool InputEventHandler(Rml::Context* context, ALLEGRO_EVENT& ev) {
