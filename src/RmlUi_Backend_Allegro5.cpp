@@ -316,7 +316,7 @@ bool RmlAllegroInputEventHandler(Rml::Context* context, ALLEGRO_EVENT& ev) {
 	switch (ev.type) {
 		case ALLEGRO_EVENT_MOUSE_AXES: {
 			if(ev.mouse.dx || ev.mouse.dy)
-				result = context->ProcessMouseMove(ev.mouse.dx, ev.mouse.dy, GetKeyModifierState());
+				result = context->ProcessMouseMove(ev.mouse.x, ev.mouse.y, GetKeyModifierState());
 			if(ev.mouse.dz)
 				result = context->ProcessMouseWheel(float(-ev.mouse.dz), GetKeyModifierState());
 			}
