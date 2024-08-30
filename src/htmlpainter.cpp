@@ -333,26 +333,25 @@ int ConvertMouseButton(int button) {
 }
 
 int GetKeyModifierState() {
-	return 0;
-	/*
-	SDL_Keymod sdl_mods = SDL_GetModState();
+	ALLEGRO_KEYBOARD_STATE state;
+	al_get_keyboard_state(&state);
 
 	int retval = 0;
 
-	if (sdl_mods & KMOD_CTRL)
+	if (al_key_down(&state, ALLEGRO_KEY_LCTRL) || al_key_down(&state, ALLEGRO_KEY_RCTRL))
 		retval |= Rml::Input::KM_CTRL;
 
-	if (sdl_mods & KMOD_SHIFT)
+	if (al_key_down(&state, ALLEGRO_KEY_LSHIFT) || al_key_down(&state, ALLEGRO_KEY_RSHIFT))
 		retval |= Rml::Input::KM_SHIFT;
 
-	if (sdl_mods & KMOD_ALT)
+	if (al_key_down(&state, ALLEGRO_KEY_ALT))
 		retval |= Rml::Input::KM_ALT;
-
-	if (sdl_mods & KMOD_NUM)
+/*
+	if (state & KMOD_NUM)
 		retval |= Rml::Input::KM_NUMLOCK;
 
-	if (sdl_mods & KMOD_CAPS)
+	if (state & KMOD_CAPS)
 		retval |= Rml::Input::KM_CAPSLOCK;
-
-	return retval;*/
+*/
+	return retval;
 }
