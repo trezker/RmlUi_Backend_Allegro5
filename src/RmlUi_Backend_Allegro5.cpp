@@ -336,6 +336,8 @@ bool RmlAllegroInputEventHandler(Rml::Context* context, ALLEGRO_EVENT& ev) {
 			result = context->ProcessKeyUp(ConvertKey(ev.keyboard.keycode), GetKeyModifierState());
 			break;
 		case ALLEGRO_EVENT_KEY_CHAR: {
+			if(ev.keyboard.keycode == ALLEGRO_KEY_BACKSPACE || ev.keyboard.keycode == ALLEGRO_KEY_DELETE)
+				break;
 			ALLEGRO_USTR *str = al_ustr_new("");
 			al_ustr_append_chr(str, ev.keyboard.unichar);
 			result = context->ProcessTextInput(Rml::String(al_cstr(str)));
