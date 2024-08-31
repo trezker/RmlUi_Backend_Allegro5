@@ -39,8 +39,8 @@ void RenderInterface_Allegro5::RenderGeometry(Rml::CompiledGeometryHandle handle
 		float tw = 1;
 		float th = 1;
 		if(texture != 0) {
-			tw = al_get_bitmap_width(textures[texture]);
-			th = al_get_bitmap_height(textures[texture]);
+			tw = al_get_bitmap_width((ALLEGRO_BITMAP*)texture);
+			th = al_get_bitmap_height((ALLEGRO_BITMAP*)texture);
 		}
 		for (ii = 0; ii < num_vertices; ii++) {
 			float x, y;
@@ -75,7 +75,7 @@ void RenderInterface_Allegro5::RenderGeometry(Rml::CompiledGeometryHandle handle
 	al_set_blender(ALLEGRO_ADD, ALLEGRO_ALPHA, ALLEGRO_INVERSE_ALPHA);
 
 	if(vbuff && ibuff) {
-		al_draw_indexed_buffer(vbuff, textures[texture], ibuff, 0, num_indices, ALLEGRO_PRIM_TRIANGLE_LIST);
+		al_draw_indexed_buffer(vbuff, (ALLEGRO_BITMAP*)texture, ibuff, 0, num_indices, ALLEGRO_PRIM_TRIANGLE_LIST);
 	}
 
 	al_destroy_vertex_buffer(vbuff);
@@ -105,9 +105,7 @@ Rml::TextureHandle RenderInterface_Allegro5::LoadTexture(Rml::Vector2i& texture_
 	ALLEGRO_BITMAP* t = al_load_bitmap(source.c_str());
 	texture_dimensions.x = al_get_bitmap_width(t);
 	texture_dimensions.y = al_get_bitmap_height(t);
-	Rml::TextureHandle texture_handle = (Rml::TextureHandle)al_get_opengl_texture(t);
-	textures[texture_handle] = t;
-	return texture_handle;
+	return (Rml::TextureHandle)t;
 }
 
 Rml::TextureHandle RenderInterface_Allegro5::GenerateTexture(Rml::Span<const Rml::byte> source, Rml::Vector2i source_dimensions) {
@@ -118,14 +116,11 @@ Rml::TextureHandle RenderInterface_Allegro5::GenerateTexture(Rml::Span<const Rml
 		std::memcpy((char*)region->data+y*region->pitch, (char*)source.data()+y*source_dimensions.x*4, source_dimensions.x*4*sizeof(char));
 	}
 	al_unlock_bitmap(t);
-	Rml::TextureHandle texture_handle = (Rml::TextureHandle)al_get_opengl_texture(t);
-	textures[texture_handle] = t;
-	return texture_handle;
+	return (Rml::TextureHandle)t;
 }
 
 void RenderInterface_Allegro5::ReleaseTexture(Rml::TextureHandle texture_handle) {
-	al_destroy_bitmap(textures[texture_handle]);
-	textures[texture_handle] = NULL;
+	al_destroy_bitmap((ALLEGRO_BITMAP*)texture_handle);
 }
 
 double SystemInterface_Allegro5::GetElapsedTime() {

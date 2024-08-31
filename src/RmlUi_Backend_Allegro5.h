@@ -5,8 +5,6 @@
 #include <map>
 #include <allegro5/allegro.h>
 
-typedef std::map<Rml::TextureHandle, ALLEGRO_BITMAP*> Textures;
-
 class RenderInterface_Allegro5 : public Rml::RenderInterface {
 private:
 	bool scissor_region_enabled = false;
@@ -16,25 +14,11 @@ private:
 		Rml::Span<const int> indices;
 	};
 public:
-	Textures textures;
-
 	Rml::CompiledGeometryHandle CompileGeometry(Rml::Span<const Rml::Vertex> vertices, Rml::Span<const int> indices) override;
 	void ReleaseGeometry(Rml::CompiledGeometryHandle geometry) override;
 	void RenderGeometry(Rml::CompiledGeometryHandle handle, Rml::Vector2f translation, Rml::TextureHandle texture) override;
 
-	// Called by RmlUi when it wants to render geometry that the application does not wish to optimise.
-	/*
-	void RenderGeometry(Rml::Vertex* vertices,
-		int num_vertices,
-		int* indices,
-		int num_indices,
-		Rml::TextureHandle texture,
-		const Rml::Vector2f& translation);
-*/
-	// Called by RmlUi when it wants to enable or disable scissoring to clip content.
 	void EnableScissorRegion(bool enable);
-
-	// Called by RmlUi when it wants to change the scissor region.
 	void SetScissorRegion(Rml::Rectanglei region) override;
 
 	Rml::TextureHandle LoadTexture(Rml::Vector2i& texture_dimensions, const Rml::String& source) override;
