@@ -1,8 +1,20 @@
 #include "RmlUi_Backend_Allegro5.h"
-#include <RmlUi/Core.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_opengl.h>
 
+Rml::CompiledGeometryHandle RenderInterface_Allegro5::CompileGeometry(Rml::Span<const Rml::Vertex> vertices, Rml::Span<const int> indices) {
+	GeometryView* data = new GeometryView{vertices, indices};
+	return reinterpret_cast<Rml::CompiledGeometryHandle>(data);
+}
+
+void RenderInterface_Allegro5::ReleaseGeometry(Rml::CompiledGeometryHandle geometry) {
+	delete reinterpret_cast<GeometryView*>(geometry);
+}
+
+void RenderInterface_Allegro5::RenderGeometry(Rml::CompiledGeometryHandle handle, Rml::Vector2f translation, Rml::TextureHandle texture) {
+
+}
+/*
 void RenderInterface_Allegro5::RenderGeometry(Rml::Vertex* vertices,
 	int num_vertices,
 	int* indices,
@@ -73,7 +85,7 @@ void RenderInterface_Allegro5::RenderGeometry(Rml::Vertex* vertices,
 	al_destroy_vertex_buffer(vbuff);
 	al_destroy_index_buffer(ibuff);
 }
-
+*/
 void RenderInterface_Allegro5::EnableScissorRegion(bool enable) {
 	if (enable)
 		al_set_clipping_rectangle(clipx, clipy, clipw, cliph);
@@ -83,37 +95,36 @@ void RenderInterface_Allegro5::EnableScissorRegion(bool enable) {
 	scissor_region_enabled = enable;
 }
 
-void RenderInterface_Allegro5::SetScissorRegion(int x, int y, int width, int height) {
-	clipx = x;
-	clipy = y;
-	clipw = width;
-	cliph = height;
+void RenderInterface_Allegro5::SetScissorRegion(Rml::Rectanglei region) {
+	clipx = region.Left();
+	clipy = region.Top();
+	clipw = region.Width();
+	cliph = region.Height();
 
 	if (scissor_region_enabled)
 		al_set_clipping_rectangle(clipx, clipy, clipw, cliph);
 }
 
-bool RenderInterface_Allegro5::LoadTexture(Rml::TextureHandle& texture_handle, Rml::Vector2i& texture_dimensions, const Rml::String& source) {
+Rml::TextureHandle RenderInterface_Allegro5::LoadTexture(Rml::Vector2i& texture_dimensions, const Rml::String& source) {
 	ALLEGRO_BITMAP* t = al_load_bitmap(source.c_str());
 	texture_dimensions.x = al_get_bitmap_width(t);
 	texture_dimensions.y = al_get_bitmap_height(t);
-	texture_handle = (Rml::TextureHandle)t;
-	texture_handle = (Rml::TextureHandle)al_get_opengl_texture(t);
+	Rml::TextureHandle texture_handle = (Rml::TextureHandle)al_get_opengl_texture(t);
 	textures[texture_handle] = t;
-	return true;
+	return texture_handle;
 }
 
-bool RenderInterface_Allegro5::GenerateTexture(Rml::TextureHandle& texture_handle, const Rml::byte* source, const Rml::Vector2i& source_dimensions) {
+Rml::TextureHandle RenderInterface_Allegro5::GenerateTexture(Rml::Span<const Rml::byte> source, Rml::Vector2i source_dimensions) {
 	al_set_new_bitmap_format(ALLEGRO_PIXEL_FORMAT_ABGR_8888);
 	ALLEGRO_BITMAP* t = al_create_bitmap(source_dimensions.x, source_dimensions.y);
 	ALLEGRO_LOCKED_REGION* region = al_lock_bitmap(t, ALLEGRO_PIXEL_FORMAT_ABGR_8888, ALLEGRO_LOCK_WRITEONLY);
 	for(int y=0; y < source_dimensions.y; y++ ) {
-		std::memcpy((char*)region->data+y*region->pitch, (char*)source+y*source_dimensions.x*4, source_dimensions.x*4*sizeof(char));
+		std::memcpy((char*)region->data+y*region->pitch, (char*)source.data()+y*source_dimensions.x*4, source_dimensions.x*4*sizeof(char));
 	}
 	al_unlock_bitmap(t);
-	texture_handle = (Rml::TextureHandle)al_get_opengl_texture(t);
+	Rml::TextureHandle texture_handle = (Rml::TextureHandle)al_get_opengl_texture(t);
 	textures[texture_handle] = t;
-	return true;
+	return texture_handle;
 }
 
 void RenderInterface_Allegro5::ReleaseTexture(Rml::TextureHandle texture_handle) {

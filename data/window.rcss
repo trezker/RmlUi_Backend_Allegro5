@@ -34,3 +34,10 @@ input.text {
 	width: 200px;
 	font-size: 0.9em;
 }
+
+textarea {
+	background-color: #fff;
+	color: #555;
+	box-sizing: border-box;
+	cursor: text;
+}
