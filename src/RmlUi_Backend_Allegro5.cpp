@@ -12,16 +12,12 @@ void RenderInterface_Allegro5::ReleaseGeometry(Rml::CompiledGeometryHandle geome
 }
 
 void RenderInterface_Allegro5::RenderGeometry(Rml::CompiledGeometryHandle handle, Rml::Vector2f translation, Rml::TextureHandle texture) {
+	const GeometryView* geometry = reinterpret_cast<GeometryView*>(handle);
+	const Rml::Vertex* vertices = geometry->vertices.data();
+	const size_t num_vertices = geometry->vertices.size();
+	const int* indices = geometry->indices.data();
+	const size_t num_indices = geometry->indices.size();
 
-}
-/*
-void RenderInterface_Allegro5::RenderGeometry(Rml::Vertex* vertices,
-	int num_vertices,
-	int* indices,
-	int num_indices,
-	Rml::TextureHandle texture,
-	const Rml::Vector2f& translation
-) {
 	ALLEGRO_VERTEX_BUFFER* vbuff;
 	ALLEGRO_INDEX_BUFFER* ibuff;
 	int ii;
@@ -51,7 +47,7 @@ void RenderInterface_Allegro5::RenderGeometry(Rml::Vertex* vertices,
 			x = vertices[ii].position.x + translation.x;
 			y = vertices[ii].position.y + translation.y;
 
-			Rml::Colour<unsigned char, 255> rc = vertices[ii].colour;
+			Rml::ColourbPremultiplied rc = vertices[ii].colour;
 			color = al_map_rgba(rc.red, rc.green, rc.blue, rc.alpha);
 
 			vtx[ii].x = x;
@@ -85,7 +81,7 @@ void RenderInterface_Allegro5::RenderGeometry(Rml::Vertex* vertices,
 	al_destroy_vertex_buffer(vbuff);
 	al_destroy_index_buffer(ibuff);
 }
-*/
+
 void RenderInterface_Allegro5::EnableScissorRegion(bool enable) {
 	if (enable)
 		al_set_clipping_rectangle(clipx, clipy, clipw, cliph);
