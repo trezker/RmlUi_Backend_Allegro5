@@ -2,14 +2,12 @@ body {
 	font-family: LatoLatin;
 	font-size: 18px;
 	color: #02475e;
-	background: #fefecc;
+	background: #fefecc00;
 	text-align: center;
-	padding: 2em 1em;
 	position: absolute;
-	border: 2px #ccc;
-	width: 500px;
-	height: 200px;
-	margin: auto;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
 }
 		
 h1 {
@@ -21,6 +19,7 @@ h1 {
 		
 p { 
 	margin: 0.7em 0;
+	width: 100%;
 }
 		
 input.text {
@@ -40,4 +39,11 @@ textarea {
 	color: #555;
 	box-sizing: border-box;
 	cursor: text;
+	height: 50px;
+}
+
+.stuff {
+	height: 100px;
+	width: 500px;
+	overflow: auto;
 }

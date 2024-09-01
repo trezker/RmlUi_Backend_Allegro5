@@ -109,14 +109,10 @@ int main() {
 					break;
 			}
 		}
-		al_clear_to_color(black);
-		
-		// Update the context to reflect any changes resulting from input events, animations,
-		// modified and added elements, or changed data in data bindings.
 		context->Update();
 
-		// Render the user interface. All geometry and other rendering commands are now
-		// submitted through the render interface.
+		al_clear_to_color(black);
+		al_draw_filled_circle(100, 100, 25, al_map_rgb(0, 255, 0));
 		context->Render();
 
 		al_flip_display();

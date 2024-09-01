@@ -5,10 +5,15 @@
 	<link type="text/rcss" href="window.rcss"/>
 </head>
 <body data-model="animals">
-	<h1>RmlUi</h1>
-	<p>Hello <span id="world">world</span>!</p>
-	<p data-if="show_text">The quick brown fox jumps over the lazy {{animal}}.</p>
-	<input type="text" data-value="animal"/>
-	<textarea cols="10" rows="5" />
+	<div>
+		<h1>RmlUi</h1>
+		<p>Hello <span id="world">world</span>!</p>
+		<p data-if="show_text">The quick brown fox jumps over the lazy {{animal}}.</p>
+	</div>
+	<div class="stuff">
+		<input type="text" data-value="animal"/><br/>
+		<input type="text"/><br/>
+		<input type="text"/><br/>
+	</div>
 </body>
 </rml>
